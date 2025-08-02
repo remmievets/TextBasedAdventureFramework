@@ -1,3 +1,12 @@
+# Text Based Adventure Framework
+
+# Setup Instructions
+
+1. Install git - https://git-scm.com/downloads
+2. Install js node - https://nodejs.org/en/download
+3. Clone repository to your machine - ```git clone https://github.com/remmievets/TextBasedAdventureFramework.git```
+4. Install npm packages that are needed for the server - ```npm install```
+
 # Running Server
 
 Login to Linux from powershell

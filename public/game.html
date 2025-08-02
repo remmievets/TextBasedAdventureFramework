@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe Game</title>
+</head>
+<body>
+    <h1 id="game-title">Tic-Tac-Toe</h1>
+    <div id="board"></div>
+    <p id="current-player"></p>
+    <a href="/">Back to Home</a>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('gameId');
+
+        if (!gameId) {
+            alert('Game ID not provided');
+            window.location.href = '/';
+        }
+
+        // Fetch game data and display the board
+        fetch(`/game/${gameId}`)
+            .then(res => res.json())
+            .then(game => {
+                document.getElementById('game-title').textContent = `Game ID: ${game.id}`;
+                document.getElementById('current-player').textContent = `Current Player: ${game.current_player}`;
+
+                const board = document.getElementById('board');
+                board.innerHTML = game.board.split('').map((cell, idx) => `
+                    <button onclick="makeMove(${idx})">${cell === '-' ? '' : cell}</button>
+                `).join('');
+            });
+
+        // Handle making a move
+        function makeMove(position) {
+            fetch('/move', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId, position })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        location.reload(); // Reload to update the board
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

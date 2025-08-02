@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lord of the Rings Personal Server</title>
+</head>
+<body>
+    <h1>Welcome to Lord of the Rings Server</h1>
+    <h2>Active Games</h2>
+    <ul id="game-list"></ul>
+    <button id="new-game-btn">Create New Game</button>
+
+    <script>
+        // Fetch and display all games
+        fetch('/games')
+            .then(res => res.json())
+            .then(games => {
+                console.log("List games");
+                console.log(games);
+                const gameList = document.getElementById('game-list');
+                games.forEach(game => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="/play.html?gameId=${game.id}">Game ID: ${game.id}</a>`;
+                    gameList.appendChild(li);
+                });
+            });
+
+        // Handle new game creation
+        document.getElementById('new-game-btn').addEventListener('click', () => {
+            fetch('/new-game', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    window.location.href = `/play.html?gameId=${data.gameId}`;
+                });
+        });
+    </script>
+</body>
+</html>
