@@ -1,430 +1,141 @@
-main {
-	background-color: slategray;
+* {
+	box-sizing: border-box;
+	margin: 0;
 }
 
-#log { background-color: hsl(35, 53%, 89%); }
-#turn_info { background-color: hsl(35, 25%, 50%); }
-
-#log .h { border-top: 1px solid black; border-bottom: 1px solid black; text-align: center; margin: 6px 0; }
-#log .h { background-color: hsl(35, 45%, 82%); }
-#log .h.turn { background-color: hsl(35, 45%, 70%); }
-#log .h.frodo { background-color: hsl(60, 100%, 50%) }
-#log .h.sam { background-color: hsl(0, 100%, 65%) }
-#log .h.pipin { background-color: hsl(120, 100%, 40%) }
-#log .h.merry { background-color: hsl(240, 100%, 70%) }
-#log .h.fatty { background-color: hsl(30, 100%, 50%) }
-
-#log .n { margin: 6px 0; }
-#log .m { margin-top: 6px; }
-
-#log .die {
-	display: inline-block;
-	vertical-align: -3px;
-	width: 24px;
-	height: 24px;
-	background-size: 100%;
-	background-color: #fff;
-	border: 1px solid #444;
-	border-radius: 8px;
-}
-
-#log .d1 { background-image: url(pieces/die001.png); }
-#log .d2 { background-image: url(pieces/die002.png); }
-#log .d3 { background-image: url(pieces/die003.png); }
-#log .d4 { background-image: url(pieces/die004.png); }
-#log .d5 { background-image: url(pieces/die005.png); }
-#log .d6 { background-image: url(pieces/die006.png); }
-
-#log .tip { cursor: pointer; }
-#log .tip:hover { text-decoration: underline; }
-
-#log div { padding-left: 20px; text-indent: -12px; }
-#log div.i { padding-left: 32px; text-indent: -12px; }
-#log div.ii { padding-left: 44px; text-indent: -12px; }
-
-#turn_info {
-	position: relative;
-	white-space: normal;
-}
-
-#reshuffle {
-	position: absolute;
-	bottom: 6px;
-	right: 4px;
-	font-style: normal;
-	font-size: 16px;
-	line-height: 16px;
-	color: #000a;
-}
-
-#tooltip {
-	pointer-events: none;
+body {
+	font-family: 'Courier New', Courier, monospace;
 	position: fixed;
-	z-index: 600;
-	right: 240px;
-	top: 60px;
+	top: 0;
+	left: 0;
+	width: 100dvw;
+	height: 100dvh;
 }
 
-@media (max-width: 800px) {
-	#tooltip {
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		margin: auto;
-	}
-}
-
-#board {
-	width: 1650px;
-	height: 625px;
-	background-size: 1650px 625px;
-	background-repeat: no-repeat;
-	box-shadow: 1px 1px 8px #0008;
-	position: relative;
-}
-
-#board.hide_tokens #tokens { display: none; }
-
-#mapwrap {
-	width: 1650px;
-	height: 825px;
-}
-
-#mapwrap.hide_map { display: none; }
-
-#map {
-	width: 100%;
-	height: 100%;
-	background-size: 1650px 825px;
-	background-repeat: no-repeat;
-	box-shadow: 1px 1px 8px #0008;
-	position: relative;
-}
-
-#map.hide_markers #markers { display: none; }
-
-#roles {
-	grid-column: 1;
-	grid-row: 1;
-}
-
-.frodo { background-color: hsl(60, 100%, 50%) }
-.sam { background-color: hsl(0, 100%, 65%) }
-.pipin { background-color: hsl(120, 100%, 40%) }
-.merry { background-color: hsl(240, 100%, 70%) }
-.fatty { background-color: hsl(30, 100%, 50%) }
-
-.role {
-	cursor: pointer;
-}
-
-.role_stat {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: end;
-	align-items: center;
-	gap: 4px;
-}
-
-.role_ring_icon,
-.role_ring_text,
-.role_heart_icon,
-.role_heart_text,
-.role_sun_icon,
-.role_sun_text,
-.role_shields_icon,
-.role_shields_text {
-	height: 24px;
-	top: 2px;
-	text-align: right;
-	background-repeat: no-repeat;
-}
-
-.role_ring_text,
-.role_heart_text,
-.role_sun_text,
-.role_shields_text {
-	width: 18px;
-	opacity: 0.9;
-}
-
-.role_ring_icon {
-	width: 17px;
-	background-position: 0 0px;
-	background-size: 17px 17px;
-	background-image: url(pieces/life001.png);
-	opacity: 0.9;
-}
-
-.role_heart_icon {
-	width: 17px;
-	background-position: 0 0px;
-	background-size: 17px 17px;
-	background-image: url(pieces/life005.png);
-	opacity: 0.9;
-}
-
-.role_sun_icon {
-	width: 17px;
-	background-position: 0 0px;
-	background-size: 17px 17px;
-	background-image: url(pieces/life008.png);
-	opacity: 0.9;
-}
-
-.role_shields_icon {
-	width: 17px;
-	background-position: 0 0px;
-	background-size: 17px 17px;
-	background-image: url(pieces/shields-back.jpg);
-	opacity: 0.9;
-}
-
-@media (max-width: 800px) {
-	#tooltip {
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		margin: auto;
-	}
-}
-
-@media (max-height: 800px) {
-	#turn_info {
-		display: none;
-	}
-}
-
-/* CARD ACTION POPUP MENU */
-
-#popup { max-width: 250px; }
-#popup li.title { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-#popup li.disabled { display: none }
-
-#popup li.title {
-	background-color: moccasin;
-}
-
-/* MARKERS */
-
-.marker {
-	position: absolute;
-	background-size: cover;
-	background-color: transparent;
-	background-repeat: no-repeat;
-	width: 44px;
-	height: 44px;
-}
-
-/* CARDS */
-
-#last_played {
-	margin: 4px auto;
-}
-
-.cards {
+#game-container {
+	position: fixed;
+	margin: 0;
+	top: 0;
+	left: 0;
+	width: 100dvw;
+	height: 100dvh;
 	display: flex;
 	flex-direction: row;
-	gap: 0.5rem;
-	flex-wrap: wrap;
 }
 
-.card {
-	width: 187px;
-	height: 285px;
-	border-radius: 16px;
-	background-size: 100%;
-	background-color: hsl(35, 53%, 89%);
-	border: 1px solid black;
-	box-shadow: 1px 1px 4px #0008;
+#log-container {
+	background-color: grey;
+	display: inline-block;
+	flex-grow: 1;
+	flex-basis: 0;
+	display: flex;
+	flex-direction: column;
+	width: min-content;
 }
 
-.card.action {
-	box-shadow: 0 0 0 3px yellow;
+#log-border {
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  flex-grow: 10;
+  flex-basis: 0;
+  border: 4px solid black;
+  border-radius: 5px;
+  margin: 10px;
+  margin-bottom: 0px;
+  min-height: 0; 
+  overflow: hidden; 
 }
 
-.card.selected {
-	box-shadow: 0 0 0 3px red;
+#log {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: white;
+  padding: 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#log::-webkit-scrollbar {
+  display: none;
 }
 
-.card.shrink {
-	width: 80px;
-	height: 123px;
-	border-radius: 8px;
+#input-container {
+	display: flex;
+	flex-grow: 1;
+	flex-basis: 0;
+	flex-direction: row;
+	padding: 10px;
+	background-color: grey;
 }
 
-#select {
-	display: block;
-	padding: 1rem;
-	background: #222;
-	width: 1650px;
+#user-input {
+	font-family: 'Courier New', Courier, monospace;
+	flex-grow: 10;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-right: 0px;
+	padding-left: 10px;
+	border-style: outset;
+	font-size: larger;
+	background-color: black;
+	color: white;
+}
+#user-input:focus {
+    outline: none;
 }
 
-.hidden {
-	display: none;
+#enter-button {
+	flex-grow: 1;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-left: 0px;
+	background-color: black;
+	color: white;
 }
 
-#hand {
-	display: block;
-	padding: 1rem;
-	background: #222;
-	width: 1650px;
+#word-container {
+	background-color: red;
+	flex-grow: 1;
+	flex-basis: 0;
+	display: flex;
+	flex-direction: column;
+	width: min-content;
 }
 
-.player-hand {
-	margin-bottom: 1rem;
-	padding: 0.5rem;
-	border: 1px solid #555;
-	border-radius: 0.5rem;
-	background: #333;
-	width: 1650px;
+#column-container {
+	background-color: gold;
+	flex-grow: 4;
+	flex-basis: 0;
+	display: flex;
+	flex-direction: row;
 }
 
-.player-name {
-	font-weight: bold;
-	margin-bottom: 0.5rem;
-	color: #fff;
+#room-column {
+	background-color: lime;
+	flex-grow: 1;
+	flex-basis: 0;
 }
 
-/* IMAGES @1X */
+#inventory-column {
+	background-color: lightgreen;
+	flex-grow: 1;
+	flex-basis: 0;
+}
 
-.board-base { background-image: url(images/game-board-base.jpg); }
+#atlas-column {
+	background-color: mediumorchid;
+	flex-grow: 1;
+	flex-basis: 0;
+}
 
-#map.bree { background-image: url(images/bree.png); }
-#map.moria { background-image: url(images/moria.jpg); }
-#map.helmsdeep { background-image: url(images/helms-deep.jpg); }
-#map.isengard { background-image: url(images/isengard.png); }
-#map.shelobslair { background-image: url(images/shelobs-lair.jpg); }
-#map.mordor { background-image: url(images/mordor.jpg); }
+#command-container {
+	background-color: chocolate;
+	flex-grow: 1;
+	flex-basis: 0;
+}
 
-/* MARKERS @1X */
 
-.marker.frodo { background-image: url(pieces/cylinder_yellow.png); }
-.marker.sam { background-image: url(pieces/cylinder_red.png); }
-.marker.pipin { background-image: url(pieces/cylinder_green.png); }
-.marker.merry { background-image: url(pieces/cylinder_blue.png); }
-.marker.fatty { background-image: url(pieces/cylinder_tan.png); }
-.marker.sauron { background-image: url(pieces/cylinder_black.png); }
-.marker.grey { background-image: url(pieces/cylinder_grey.png); }
-
-/* CARDS @1X */
-
-.card_back{background-image:url(cards/cards-quest-back.jpg)}
-.card_0{background-image:url(cards/quest000.png)}
-.card_1{background-image:url(cards/quest001.png)}
-.card_2{background-image:url(cards/quest002.png)}
-.card_3{background-image:url(cards/quest003.png)}
-.card_4{background-image:url(cards/quest004.png)}
-.card_5{background-image:url(cards/quest005.png)}
-.card_6{background-image:url(cards/quest006.png)}
-.card_7{background-image:url(cards/quest007.png)}
-.card_8{background-image:url(cards/quest008.png)}
-.card_9{background-image:url(cards/quest009.png)}
-.card_10{background-image:url(cards/quest010.png)}
-.card_11{background-image:url(cards/quest011.png)}
-.card_12{background-image:url(cards/quest012.png)}
-.card_13{background-image:url(cards/quest013.png)}
-.card_14{background-image:url(cards/quest014.png)}
-.card_15{background-image:url(cards/quest015.png)}
-.card_16{background-image:url(cards/quest016.png)}
-.card_17{background-image:url(cards/quest017.png)}
-.card_18{background-image:url(cards/quest018.png)}
-.card_19{background-image:url(cards/quest019.png)}
-.card_20{background-image:url(cards/quest020.png)}
-.card_21{background-image:url(cards/quest021.png)}
-.card_22{background-image:url(cards/quest022.png)}
-.card_23{background-image:url(cards/quest023.png)}
-.card_24{background-image:url(cards/quest024.png)}
-.card_25{background-image:url(cards/quest025.png)}
-.card_26{background-image:url(cards/quest026.png)}
-.card_27{background-image:url(cards/quest027.png)}
-.card_28{background-image:url(cards/quest028.png)}
-.card_29{background-image:url(cards/quest029.png)}
-.card_30{background-image:url(cards/quest030.png)}
-.card_31{background-image:url(cards/quest031.png)}
-.card_32{background-image:url(cards/quest032.png)}
-.card_33{background-image:url(cards/quest033.png)}
-.card_34{background-image:url(cards/quest034.png)}
-.card_35{background-image:url(cards/quest035.png)}
-.card_36{background-image:url(cards/quest036.png)}
-.card_37{background-image:url(cards/quest037.png)}
-.card_38{background-image:url(cards/quest038.png)}
-.card_39{background-image:url(cards/quest039.png)}
-.card_40{background-image:url(cards/quest040.png)}
-.card_41{background-image:url(cards/quest041.png)}
-.card_42{background-image:url(cards/quest042.png)}
-.card_43{background-image:url(cards/quest043.png)}
-.card_44{background-image:url(cards/quest044.png)}
-.card_45{background-image:url(cards/quest045.png)}
-.card_46{background-image:url(cards/quest046.png)}
-.card_47{background-image:url(cards/quest047.png)}
-.card_48{background-image:url(cards/quest048.png)}
-.card_49{background-image:url(cards/quest049.png)}
-.card_50{background-image:url(cards/quest050.png)}
-.card_51{background-image:url(cards/quest051.png)}
-.card_52{background-image:url(cards/quest052.png)}
-.card_53{background-image:url(cards/quest053.png)}
-.card_54{background-image:url(cards/quest054.png)}
-.card_55{background-image:url(cards/quest055.png)}
-.card_56{background-image:url(cards/quest056.png)}
-.card_57{background-image:url(cards/quest057.png)}
-.card_58{background-image:url(cards/quest058.png)}
-.card_59{background-image:url(cards/quest059.png)}
-.card_60{background-image:url(cards/gandalf000.png)}
-.card_61{background-image:url(cards/gandalf001.png)}
-.card_62{background-image:url(cards/gandalf002.png)}
-.card_63{background-image:url(cards/gandalf003.png)}
-.card_64{background-image:url(cards/gandalf004.png)}
-.card_65{background-image:url(cards/gandalf005.png)}
-.card_66{background-image:url(cards/gandalf006.png)}
-.card_67{background-image:url(cards/gandalf007.png)}
-.card_68{background-image:url(cards/legendary000.png)}
-.card_69{background-image:url(cards/legendary001.png)}
-.card_70{background-image:url(cards/legendary002.png)}
-.card_71{background-image:url(cards/legendary003.png)}
-.card_72{background-image:url(cards/legendary004.png)}
-.card_73{background-image:url(cards/legendary005.png)}
-.card_74{background-image:url(cards/legendary006.png)}
-.card_75{background-image:url(cards/legendary007.png)}
-.card_76{background-image:url(cards/legendary008.png)}
-.card_77{background-image:url(cards/legendary009.png)}
-.card_78{background-image:url(cards/legendary010.png)}
-.card_79{background-image:url(cards/legendary011.png)}
-.card_80{background-image:url(cards/legendary012.png)}
-.card_81{background-image:url(cards/legendary013.png)}
-.card_82{background-image:url(cards/legendary014.png)}
-.card_83{background-image:url(cards/legendary015.png)}
-.card_84{background-image:url(cards/legendary016.png)}
-.card_85{background-image:url(cards/legendary017.png)}
-.card_86{background-image:url(cards/legendary018.png)}
-.card_87{background-image:url(cards/legendary019.png)}
-.card_88{background-image:url(cards/legendary020.png)}
-.card_89{background-image:url(cards/legendary021.png)}
-.card_90{background-image:url(cards/legendary022.png)}
-.card_91{background-image:url(cards/legendary023.png)}
-.card_92{background-image:url(cards/legendary024.png)}
-.card_93{background-image:url(cards/legendary025.png)}
-.card_94{background-image:url(cards/legendary026.png)}
-.card_95{background-image:url(cards/legendary027.png)}
-.card_96{background-image:url(cards/legendary028.png)}
-.card_97{background-image:url(cards/legendary029.png)}
-.card_98{background-image:url(cards/legendary030.png)}
-.card_99{background-image:url(cards/legendary031.png)}
-.card_100{background-image:url(cards/legendary032.png)}
-.card_101{background-image:url(cards/legendary033.png)}
-.card_102{background-image:url(cards/legendary034.png)}
-.card_103{background-image:url(cards/legendary035.png)}
-.card_104{background-image:url(cards/legendary036.png)}
-.card_105{background-image:url(cards/legendary037.png)}
-.card_106{background-image:url(cards/legendary038.png)}
-.card_107{background-image:url(cards/legendary039.png)}
-.card_108{background-image:url(cards/legendary040.png)}
-.card_109{background-image:url(cards/legendary041.png)}
-.card_110{background-image:url(cards/legendary042.png)}
-.card_111{background-image:url(cards/legendary043.png)}
-.card_112{background-image:url(cards/legendary044.png)}
-.card_113{background-image:url(cards/legendary045.png)}
-.card_114{background-image:url(cards/legendary046.png)}
-.card_115{background-image:url(cards/legendary047.png)}
