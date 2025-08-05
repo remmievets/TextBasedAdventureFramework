@@ -23,25 +23,25 @@ const gameTemplate = {
   }
 },
 //All the impressions the player has had, which is the list of objects and rooms that the player has seen once before.
-"impressions" : ["Strange Cabin?"],
+"impressions" : {"Strange Cabin?" : []},
 //The player's inventory, which starts empty.
 "inventory" : {},
 };
 
 //Copy the game template to the new game
 function startGame(gameId) {
-    console.log(`START GAME ${gameId}`);
+  console.log(`START GAME ${gameId}`);
   game[gameId] = structuredClone(gameTemplate);
   console.log(game[gameId]);
   return game[gameId];
 }
 
 function updateGame(gameId, gameData) {
-    game[gameId] = gameData;
+  game[gameId] = gameData;
 }
 
 function getGameView(gameId) {
-    console.log(`GAME VIEW ${gameId}`);
+  console.log(`GAME VIEW ${gameId}`);
   return game[gameId];
 }
 
