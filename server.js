@@ -13,9 +13,9 @@ const tba = require('./game.js');
 //This line did not work - not sure if it is needed for process.env
 require('dotenv').config();
 
-const HTTP_HOST = process.env.HTTP_HOST || 'localhost';
+const HTTP_HOST = process.env.HTTP_HOST || '0.0.0.0';
 const HTTP_PORT = process.env.HTTP_PORT || 8080;
-const SITE_NAME = process.env.SITE_NAME || 'Localhost';
+const SITE_NAME = process.env.SITE_NAME || '0.0.0.0';
 const SITE_URL = process.env.SITE_URL || 'http://' + HTTP_HOST + ':' + HTTP_PORT;
 
 // Web server setup
@@ -92,7 +92,7 @@ app.post('/new-game', (req, res) => {
 
     // Save in the database
     const result = create_new_game(gameData);
-    console.log(result);
+    //console.log(result);
 
     // Send information to webpage
     res.json({ gameId: result.lastInsertRowid, game: gameData });
@@ -127,7 +127,7 @@ app.post('/move', (req, res) => {
         const { gameId, move } = req.body;
 
         // Output infomation about move action
-        console.log(`${move}`);
+        console.log(`${gameId} ${move}`);
 
         // Split move into command and arguments
         // Splits by any whitespace
