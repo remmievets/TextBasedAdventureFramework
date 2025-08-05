@@ -56,7 +56,7 @@ function load_game(gameId) {
     const result = db.prepare('SELECT * FROM games WHERE id = ?').get(gameId);
     if (result) {
         const gameParsed = JSON.parse(result.game);
-        return { raw: result, game: gameParsed };
+        return { gameId: gameId, game: gameParsed };
     }
     return null;
 }
@@ -88,38 +88,27 @@ app.post('/new-game', (req, res) => {
     console.log(`create a new game`);
 
     // Setup a new game
-    const gameData = tba.startGame('Steve');//setup_game();
+    const gameDummy = {};
+    const result = create_new_game(gameDummy);
+
+    // Now update with actual game information
+    const gameData = tba.startGame(result.lastInsertRowid);
 
     // Save in the database
-    const result = create_new_game(gameData);
-    //console.log(result);
+    save_game(result.lastInsertRowid, gameData);
 
     // Send information to webpage
     res.json({ gameId: result.lastInsertRowid, game: gameData });
-    console.log(res);
 });
 
 // Get the state of a specific game
 app.get('/game/:gameId', (req, res) => {
     console.log(`Get gameId ${req.params.gameId}`);
-    const result = load_game(req.params.gameId);
-    if (!result) {
-        return res.status(404).json({ error: 'Game not found' });
-    }
+
     // set game information to game
-    let gameboard = result.game;
-
-    // TEMP - Re-setup a new game
-    //setup_game();
-    //const save = save_game(req.params.gameId, game);
-    // TEMP - end
-
-    res.json({ id: req.params.gameId, game: gameboard });
+    const view = tba.getGameView(gameId);
+    res.json({ id: req.params.gameId, game: view });
 });
-
-//const moveHandlers = {
-//    BUTTON: (game, button, args) => execute_button(game, button, args),
-//};
 
 // Make a move
 app.post('/move', (req, res) => {
@@ -127,22 +116,14 @@ app.post('/move', (req, res) => {
         const { gameId, move } = req.body;
 
         // Output infomation about move action
-        console.log(`${gameId} ${move}`);
+        const game = tba.parseAction(gameId, move);
 
-        // Split move into command and arguments
-        // Splits by any whitespace
-        //const parts = move.trim().split(/\s+/);
-        //const command = parts[0];
-        //const func = parts[1];
-        //const args = parts.slice(2);
-
-        // Dispatch to appropriate handler
-        //const handler = moveHandlers[command];
-        //if (!handler) throw new Error(`Unknown move command: ${move}`);
-        //handler(game, func, args);
+        // Save in the database
+        save_game(result.lastInsertRowid, game);
 
         // Respond with the updated board and next player
-        //res.json({ id: gameId, game: game });
+        const view = tba.getGameView(gameId);
+        res.json({ id: gameId, game: view });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
