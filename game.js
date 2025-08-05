@@ -30,21 +30,30 @@ const gameTemplate = {
 
 //Copy the game template to the new game
 function startGame(gameId) {
-  return game[gameId] = structuredClone(gameTemplate);
+    console.log(`START GAME ${gameId}`);
+  game[gameId] = structuredClone(gameTemplate);
+  console.log(game[gameId]);
+  return game[gameId];
+}
+
+function updateGame(gameId, gameData) {
+    game[gameId] = gameData;
 }
 
 function getGameView(gameId) {
+    console.log(`GAME VIEW ${gameId}`);
   return game[gameId];
 }
 
 function parseAction(gameId, move) {
-  console.log(`${gameId} ${move}`);
+  console.log(`PARSE ACTION ${gameId} ${move}`);
   return game[gameId];
 }
 
 // Export the functions
 module.exports = {
   startGame,
+  updateGame,
   getGameView,
   parseAction,
 };

@@ -48,7 +48,7 @@ function makeMove(move) {
             if (data.error) {
                 alert(data.error);
             } else {
-                on_update(data.board);
+                console.log(data);
             }
         });
 }

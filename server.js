@@ -56,7 +56,7 @@ function load_game(gameId) {
     const result = db.prepare('SELECT * FROM games WHERE id = ?').get(gameId);
     if (result) {
         const gameParsed = JSON.parse(result.game);
-        return { gameId: gameId, game: gameParsed };
+        return gameParsed;
     }
     return null;
 }
@@ -93,20 +93,28 @@ app.post('/new-game', (req, res) => {
 
     // Now update with actual game information
     const gameData = tba.startGame(result.lastInsertRowid);
+    console.log(result.lastInsertRowid);
 
     // Save in the database
     save_game(result.lastInsertRowid, gameData);
 
     // Send information to webpage
-    res.json({ gameId: result.lastInsertRowid, game: gameData });
+    const view = tba.getGameView(result.lastInsertRowid);
+    console.log(view);
+    res.json({ gameId: result.lastInsertRowid, game: view });
 });
 
 // Get the state of a specific game
 app.get('/game/:gameId', (req, res) => {
     console.log(`Get gameId ${req.params.gameId}`);
+    
+    // Reload from database
+    const game = load_game(req.params.gameId);
+    tba.updateGame(req.params.gameId, game);
 
     // set game information to game
-    const view = tba.getGameView(gameId);
+    const view = tba.getGameView(req.params.gameId);
+    //console.log(view);
     res.json({ id: req.params.gameId, game: view });
 });
 
@@ -119,7 +127,7 @@ app.post('/move', (req, res) => {
         const game = tba.parseAction(gameId, move);
 
         // Save in the database
-        save_game(result.lastInsertRowid, game);
+        save_game(gameId, game);
 
         // Respond with the updated board and next player
         const view = tba.getGameView(gameId);
@@ -134,119 +142,3 @@ app.post('/move', (req, res) => {
 app.listen(HTTP_PORT, HTTP_HOST, () => {
     console.log(`Server running on ${HTTP_HOST}:${HTTP_PORT}`);
 });
-
-/* COMMON LIBRARY */
-function random(range) {
-    // An MLCG using integer arithmetic with doubles.
-    // https://www.ams.org/journals/mcom/1999-68-225/S0025-5718-99-00996-5/S0025-5718-99-00996-5.pdf
-    // m = 2**35 − 31
-    return (game.seed = (game.seed * 200105) % 34359738337) % range;
-}
-
-function random_bigint(range) {
-    // Largest MLCG that will fit its state in a double.
-    // Uses BigInt for arithmetic, so is an order of magnitude slower.
-    // https://www.ams.org/journals/mcom/1999-68-225/S0025-5718-99-00996-5/S0025-5718-99-00996-5.pdf
-    // m = 2**53 - 111
-    return (game.seed = Number((BigInt(game.seed) * 5667072534355537n) % 9007199254740881n)) % range;
-}
-
-function shuffle(list) {
-    // Fisher-Yates shuffle
-    for (let i = list.length - 1; i > 0; --i) {
-        let j = random(i + 1);
-        let tmp = list[j];
-        list[j] = list[i];
-        list[i] = tmp;
-    }
-}
-
-function shuffle_bigint(list) {
-    // Fisher-Yates shuffle
-    for (let i = list.length - 1; i > 0; --i) {
-        let j = random_bigint(i + 1);
-        let tmp = list[j];
-        list[j] = list[i];
-        list[i] = tmp;
-    }
-}
-
-function create_deck(list, startIndex, endIndex) {
-    list.length = 0;
-    for (let i = startIndex; i <= endIndex; i++) {
-        list.push(i);
-    }
-}
-
-function roll_d6() {
-    return random(6) + 1;
-}
-
-// Array remove and insert (faster than splice)
-
-function array_remove(array, index) {
-    let n = array.length;
-    for (let i = index + 1; i < n; ++i) array[i - 1] = array[i];
-    array.length = n - 1;
-}
-
-function array_insert(array, index, item) {
-    for (let i = array.length; i > index; --i) array[i] = array[i - 1];
-    array[index] = item;
-}
-
-function array_insert_pair(array, index, key, value) {
-    for (let i = array.length; i > index; i -= 2) {
-        array[i] = array[i - 2];
-        array[i + 1] = array[i - 1];
-    }
-    array[index] = key;
-    array[index + 1] = value;
-}
-
-// Set as plain sorted array
-
-function set_clear(set) {
-    set.length = 0;
-}
-
-function set_has(set, item) {
-    let a = 0;
-    let b = set.length - 1;
-    while (a <= b) {
-        let m = (a + b) >> 1;
-        let x = set[m];
-        if (item < x) b = m - 1;
-        else if (item > x) a = m + 1;
-        else return true;
-    }
-    return false;
-}
-
-function set_add(set, item) {
-    let a = 0;
-    let b = set.length - 1;
-    while (a <= b) {
-        let m = (a + b) >> 1;
-        let x = set[m];
-        if (item < x) b = m - 1;
-        else if (item > x) a = m + 1;
-        else return;
-    }
-    array_insert(set, a, item);
-}
-
-function set_delete(set, item) {
-    let a = 0;
-    let b = set.length - 1;
-    while (a <= b) {
-        let m = (a + b) >> 1;
-        let x = set[m];
-        if (item < x) b = m - 1;
-        else if (item > x) a = m + 1;
-        else {
-            array_remove(set, m);
-            return;
-        }
-    }
-}
