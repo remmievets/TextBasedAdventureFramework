@@ -1,15 +1,40 @@
-'use strict';
 
+//Setup document elements as variables
+const enterButton = document.getElementById('enter-button');
+const userInput = document.getElementById('user-input');
+
+//Function for recieving input from the user
+function recievedInput(event) {
+    if (event.target.id == "enter-button" || event.key == "Enter") {
+        console.log("I got input:" + userInput.value);
+        //After reading the input, resets the input field.
+        userInput.value = '';
+    }
+}
+
+//Add listeners for clicking the enter button and entering text.
+if (enterButton) { 
+    enterButton.addEventListener('click', recievedInput);
+}
+
+if (userInput) { 
+    userInput.addEventListener('keydown', recievedInput);
+}
+
+//Old code below
 /*
+    'use strict';
+
+
     global view, data, roles, send_action, action_button
-*/
+
 
 // TODO: show "reshuffle" flag next to card deck display
 
 function toggle_counters() {
     // Cycle between showing everything, only markers, and nothing.
     console.log('toggle_counters');
-    /*
+    
     if (ui.map.classList.contains("hide_markers")) {
         ui.map.classList.remove("hide_markers")
         ui.map.classList.remove("hide_pieces")
@@ -18,10 +43,10 @@ function toggle_counters() {
     } else {
         ui.map.classList.add("hide_pieces")
     }
-    */
+    
 }
 
-/* COMMON */
+ COMMON 
 
 function lerp(a, b, t) {
     return a + t * (b - a);
@@ -40,13 +65,13 @@ function set_has(set, item) {
     return false;
 }
 
-/* DATA */
+ DATA 
 
 const CARDS = data.cards;
 
-/* ACCESSORS */
+ ACCESSORS 
 
-/* ANIMATION */
+ ANIMATION 
 
 let activeSpace = null;
 let offsetX = 0;
@@ -56,10 +81,10 @@ let wasDragged = false;
 const map = document.getElementById('board');
 const container = document.getElementById('tokens');
 
-/*
+
 const map = document.getElementById('map');
 const container = document.getElementById('spaces');
-*/
+
 
 function on_space_click(e) {
     if (activeSpace) return;
@@ -121,14 +146,14 @@ function on_drag_ends(e) {
     }
 }
 
-/*
+
 map.addEventListener('click', on_space_click);
 document.addEventListener('mousemove', on_handle_move);
 document.addEventListener('mouseup', on_drag_ends);
 console.log(map);
-*/
 
-/* BUILD UI */
+
+ BUILD UI 
 
 let ui = {
     favicon: document.getElementById('favicon'),
@@ -358,16 +383,16 @@ function on_init(view) {
     }
 }
 
-/* UPDATE UI */
+ UPDATE UI 
 
 function on_update(view) {
     console.log(view);
     on_init(view);
 }
 
-/* TOOLTIPS */
+ TOOLTIPS 
 
-/* LOG */
+ LOG 
 
 function sub_minus(_match, p1) {
     return '\u2212' + p1;
@@ -438,3 +463,4 @@ function on_log(text) {
     p.innerHTML = text;
     return p;
 }
+*/

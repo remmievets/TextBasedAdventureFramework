@@ -43,6 +43,7 @@ body {
   border-radius: 5px;
   margin: 10px;
   margin-bottom: 0px;
+  margin-right: 5px;
   min-height: 0; 
   overflow: hidden; 
 }
@@ -69,18 +70,22 @@ body {
 	flex-basis: 0;
 	flex-direction: row;
 	padding: 10px;
+	padding-right: 5px;
 	background-color: grey;
 }
 
 #user-input {
 	font-family: 'Courier New', Courier, monospace;
 	flex-grow: 10;
+	flex-basis: 0;
+	width: 0;
 	border-bottom-left-radius: 5px;
 	border-top-left-radius: 5px;
 	border-right: 0px;
+	border-color: black;
 	padding-left: 10px;
 	border-style: outset;
-	font-size: larger;
+	font-size: calc(10px + 2vh);
 	background-color: black;
 	color: white;
 }
@@ -90,15 +95,20 @@ body {
 
 #enter-button {
 	flex-grow: 1;
+	flex-basis: 0;
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-left: 0px;
-	background-color: black;
+	border-color: black;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: calc(10px + 2vh);
+	font-weight: bold;
+	background-color: green;
 	color: white;
 }
 
 #word-container {
-	background-color: red;
+	background-color: grey;
 	flex-grow: 1;
 	flex-basis: 0;
 	display: flex;
@@ -112,24 +122,86 @@ body {
 	flex-basis: 0;
 	display: flex;
 	flex-direction: row;
+	margin: 10px;
+	margin-left: 5px;
 }
 
 #room-column {
 	background-color: lime;
 	flex-grow: 1;
 	flex-basis: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#room-header {
+	background-color: magenta;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	flex-basis: 0;
+	font-weight: bold;
+}
+
+#room-list {
+	background-color: mediumorchid;
+	flex-grow: 10;
+	flex-basis: 0;
+	padding: 3px;
+	font-style: italic;
 }
 
 #inventory-column {
 	background-color: lightgreen;
 	flex-grow: 1;
 	flex-basis: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#inventory-header {
+	background-color: khaki;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	flex-basis: 0;
+	font-weight: bold;
+}
+
+#inventory-list {
+	background-color: royalblue;
+	flex-grow: 10;
+	flex-basis: 0;
+	padding: 3px;
+	font-style: italic;
 }
 
 #atlas-column {
 	background-color: mediumorchid;
 	flex-grow: 1;
 	flex-basis: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#atlas-header {
+	background-color: lawngreen;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	flex-basis: 0;
+	font-weight: bold;
+}
+
+#atlas-list {
+	background-color: orange;
+	flex-grow: 10;
+	flex-basis: 0;
+	padding: 3px;
+	font-style: italic;
 }
 
 #command-container {
