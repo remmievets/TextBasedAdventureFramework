@@ -9,13 +9,8 @@ const ui = {
     roomList: document.getElementById('room-list'),
     inventoryList: document.getElementById('inventory-list'),
     atlasList: document.getElementById('atlas-list'),
+    lookCommand: document.getElementById('look-command'),
 };
-
-//Setup empty lists for the roomList, inventoryList, and atlasList respectively
-//Oops I forgot to use these
-let roomListInternal = [];
-let inventoryListInternal = [];
-let atlasListInternal = [];
 
 //Function for recieving input from the user
 function recievedInput(event) {
@@ -25,6 +20,20 @@ function recievedInput(event) {
         //After reading the input, resets the input field.
         ui.userInput.value = '';
     }
+}
+
+//Function for adding the commands to the user input on click
+function addCommand(event) {
+    let text = event.target.id.substring(0, event.target.id.indexOf('-'));
+    if (text === 'look') {
+        text = 'look at '
+    }
+    ui.userInput.value += text;
+}
+
+//Add listeners for clicking the command buttons.
+if (ui.lookCommand) {
+    ui.lookCommand.addEventListener('click', addCommand);
 }
 
 //Add listeners for clicking the enter button and entering text.
@@ -51,6 +60,16 @@ function updateScreen(gameState) {
     //atlas needs the entire dictionary of impressions
     updateList(ui.atlasList, gameState['game']['impressions']);
 
+    //Update the log with it's information.
+    let container = document.getElementById('log');
+    container.replaceChildren();
+    // Loop through each log entry (text) and call on_log
+    for (const entry of gameState["game"]["log"]) {
+        let logElement = on_log(entry);
+        container.appendChild(logElement);
+    }
+    scroll_log_to_end();
+
     //Go through all the new clickable text elements and add event listeners to them.
     const clickableElements = document.querySelectorAll('.clickable');
     clickableElements.forEach((element) => {
@@ -68,15 +87,6 @@ function updateScreen(gameState) {
         });
     });
 
-    //Update the log with it's information.
-    let container = document.getElementById('log');
-    container.replaceChildren();
-    // Loop through each log entry (text) and call on_log
-    for (const entry of gameState["game"]["log"]) {
-        let logElement = on_log(entry);
-        container.appendChild(logElement);
-    }
-    scroll_log_to_end();
 }
 
 //scroll to the end of the log
@@ -88,6 +98,12 @@ function scroll_log_to_end() {
 //function for creating a new div for the log
 function on_log(text) {
     let p = document.createElement('div');
+    //Give the log entry was from the player give it a different class than the server for formating and css.
+    if (text.substring(0, 2) === '>>') {
+        p.classList.add('log-entry-player');
+    } else {
+        p.classList.add('log-entry-server');
+    }
     p.innerHTML = text;
     return p;
 }
@@ -102,12 +118,6 @@ function updateList(listHTML, listArray) {
         console.log(listHTML, listArray);
         convertedList = Object.keys(listArray);
     }
-    //TEMPORARY ADDING OF TEST ITEMS
-    // REMOVE LATER
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    convertedList.push('example item', 'nothing', 'item with a lot of words', 'extremelyLongWordTest');
-    convertedList.push('blue', 'red', 'green', 'purple', 'yellow', 'grey', 'black', 'opal');
-    convertedList.push('emerald', 'diamond', 'opal', 'lapis', 'coal', 'silver', 'key', 'gold', 'platnim');
     //Sort the items in the list because why not
     convertedList.sort();
     //Now, for each item in the list generate tags so it'll be a clickable link and then concatonate to the finalText.
