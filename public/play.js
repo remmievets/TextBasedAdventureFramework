@@ -67,6 +67,29 @@ function updateScreen(gameState) {
             this.style.textDecoration = 'none';
         });
     });
+
+    //Update the log with it's information.
+    let container = document.getElementById('log');
+    container.replaceChildren();
+    // Loop through each log entry (text) and call on_log
+    for (const entry of gameState["game"]["log"]) {
+        let logElement = on_log(entry);
+        container.appendChild(logElement);
+    }
+    scroll_log_to_end();
+}
+
+//scroll to the end of the log
+function scroll_log_to_end() {
+    let div = document.getElementById('log');
+    div.scrollTop = div.scrollHeight;
+}
+
+//function for creating a new div for the log
+function on_log(text) {
+    let p = document.createElement('div');
+    p.innerHTML = text;
+    return p;
 }
 
 //function for filling one of the three lists with given list items and making them clickable elements

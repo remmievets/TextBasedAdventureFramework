@@ -48,6 +48,7 @@ function getGameView(gameId) {
 
 function parseAction(gameId, move) {
     console.log(`PARSE ACTION ${gameId} ${move}`);
+    game[gameId].log.push(move);
     return game[gameId];
 }
 
