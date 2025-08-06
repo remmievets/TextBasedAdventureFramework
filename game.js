@@ -26,6 +26,7 @@ const gameTemplate = {
     impressions: { 'Strange Cabin?': [] },
     //The player's inventory, which starts empty.
     inventory: {},
+    log:[],
 };
 
 //Copy the game template to the new game

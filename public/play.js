@@ -41,7 +41,7 @@ function updateScreen(gameState) {
     console.log(gameState);
     console.log(ui);
     //Update the room-header to be the name of the current room
-    ui.roomHeader.innerHTML = gameState.game['currentPlayerLocation'];
+    ui.roomHeader.innerHTML = gameState['game']['currentPlayerLocation'];
 
     //Update the room, inventory, and atlas lists with current information
     //roomList wants the impression list for the current room the player is in
