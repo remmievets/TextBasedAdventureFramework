@@ -107,7 +107,7 @@ app.post('/new-game', (req, res) => {
 // Get the state of a specific game
 app.get('/game/:gameId', (req, res) => {
     console.log(`Get gameId ${req.params.gameId}`);
-    
+
     // Reload from database
     const game = load_game(req.params.gameId);
     tba.updateGame(req.params.gameId, game);

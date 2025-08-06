@@ -19,8 +19,8 @@ let atlasListInternal = [];
 
 //Function for recieving input from the user
 function recievedInput(event) {
-    if (event.target.id == "enter-button" || event.key == "Enter") {
-        console.log("I got input:" + ui.userInput.value);
+    if (event.target.id == 'enter-button' || event.key == 'Enter') {
+        console.log('I got input:' + ui.userInput.value);
         makeMove(ui.userInput.value);
         //After reading the input, resets the input field.
         ui.userInput.value = '';
@@ -28,11 +28,11 @@ function recievedInput(event) {
 }
 
 //Add listeners for clicking the enter button and entering text.
-if (ui.enterButton) { 
+if (ui.enterButton) {
     ui.enterButton.addEventListener('click', recievedInput);
 }
 
-if (ui.userInput) { 
+if (ui.userInput) {
     ui.userInput.addEventListener('keydown', recievedInput);
 }
 
@@ -41,28 +41,28 @@ function updateScreen(gameState) {
     console.log(gameState);
     console.log(ui);
     //Update the room-header to be the name of the current room
-    ui.roomHeader.innerHTML = gameState.game["currentPlayerLocation"];
+    ui.roomHeader.innerHTML = gameState.game['currentPlayerLocation'];
 
     //Update the room, inventory, and atlas lists with current information
     //roomList wants the impression list for the current room the player is in
-    updateList(ui.roomList, gameState["game"]["impressions"][gameState["game"]["currentPlayerLocation"]]);
+    updateList(ui.roomList, gameState['game']['impressions'][gameState['game']['currentPlayerLocation']]);
     //inventory wants the inventory
-    updateList(ui.inventoryList, gameState["game"]["inventory"]);
+    updateList(ui.inventoryList, gameState['game']['inventory']);
     //atlas needs the entire dictionary of impressions
-    updateList(ui.atlasList, gameState["game"]["impressions"]);
+    updateList(ui.atlasList, gameState['game']['impressions']);
 
     //Go through all the new clickable text elements and add event listeners to them.
     const clickableElements = document.querySelectorAll('.clickable');
-    clickableElements.forEach(element => {
-        element.addEventListener('click', function() {
+    clickableElements.forEach((element) => {
+        element.addEventListener('click', function () {
             //We want to add the word clicked to the user input field
             ui.userInput.value += this.textContent;
         });
-        element.addEventListener('mouseenter', function() {
+        element.addEventListener('mouseenter', function () {
             //Then we want them to visually look different when moused over
             this.style.textDecoration = 'underline';
         });
-        element.addEventListener('mouseleave', function() {
+        element.addEventListener('mouseleave', function () {
             //Then we want them to visually look different when moused over
             this.style.textDecoration = 'none';
         });
@@ -73,7 +73,7 @@ function updateScreen(gameState) {
 function updateList(listHTML, listArray) {
     //listArray will be either a list or a dictionary, if it's a dictionary I want the keys as a list.
     let convertedList = listArray;
-    let finalText = "";
+    let finalText = '';
     if (!Array.isArray(listArray)) {
         //it isn't a list, so make it one
         console.log(listHTML, listArray);
@@ -82,14 +82,15 @@ function updateList(listHTML, listArray) {
     //TEMPORARY ADDING OF TEST ITEMS
     // REMOVE LATER
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    convertedList.push("example item", "nothing", "item with a lot of words", "extremelyLongWordTest");
-    convertedList.push("blue", "red", "green", "purple", "yellow", "grey", "black", "opal");
-    convertedList.push("emerald", "diamond", "opal", "lapis", "coal", "silver", "key", "gold", "platnim");
+    convertedList.push('example item', 'nothing', 'item with a lot of words', 'extremelyLongWordTest');
+    convertedList.push('blue', 'red', 'green', 'purple', 'yellow', 'grey', 'black', 'opal');
+    convertedList.push('emerald', 'diamond', 'opal', 'lapis', 'coal', 'silver', 'key', 'gold', 'platnim');
     //Sort the items in the list because why not
     convertedList.sort();
     //Now, for each item in the list generate tags so it'll be a clickable link and then concatonate to the finalText.
     for (let i = 0; i < convertedList.length; i++) {
-        finalText += "<div class='list-index'><div class='list-dot'>- </div><span class='clickable'>" + convertedList[i] + "</span></div>";
+        finalText +=
+            "<div class='list-index'><div class='list-dot'>- </div><span class='clickable'>" + convertedList[i] + '</span></div>';
     }
     //set the listHTML's innerHTML to whatever the finalText is.
     listHTML.innerHTML = finalText;
