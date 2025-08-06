@@ -1,14 +1,18 @@
 'use strict';
 
-//Setup document elements as variables
-const enterButton = document.getElementById('enter-button');
-const userInput = document.getElementById('user-input');
-const roomHeader = document.getElementById('room-header');
-const roomList = document.getElementById('room-list');
-const inventoryList = document.getElementById('inventory-list');
-const atlasList = document.getElementById('atlas-list');
+/* BUILD UI */
+
+const ui = {
+    enterButton: document.getElementById('enter-button'),
+    userInput: document.getElementById('user-input'),
+    roomHeader: document.getElementById('room-header'),
+    roomList: document.getElementById('room-list'),
+    inventoryList: document.getElementById('inventory-list'),
+    atlasList: document.getElementById('atlas-list'),
+};
 
 //Setup empty lists for the roomList, inventoryList, and atlasList respectively
+//Oops I forgot to use these
 let roomListInternal = [];
 let inventoryListInternal = [];
 let atlasListInternal = [];
@@ -16,41 +20,43 @@ let atlasListInternal = [];
 //Function for recieving input from the user
 function recievedInput(event) {
     if (event.target.id == "enter-button" || event.key == "Enter") {
-        console.log("I got input:" + userInput.value);
-        makeMove(userInput.value);
+        console.log("I got input:" + ui.userInput.value);
+        makeMove(ui.userInput.value);
         //After reading the input, resets the input field.
-        userInput.value = '';
+        ui.userInput.value = '';
     }
 }
 
 //Add listeners for clicking the enter button and entering text.
-if (enterButton) { 
-    enterButton.addEventListener('click', recievedInput);
+if (ui.enterButton) { 
+    ui.enterButton.addEventListener('click', recievedInput);
 }
 
-if (userInput) { 
-    userInput.addEventListener('keydown', recievedInput);
+if (ui.userInput) { 
+    ui.userInput.addEventListener('keydown', recievedInput);
 }
 
 //function for updating the visuals of the screen to reflect the new game state
 function updateScreen(gameState) {
+    console.log(gameState);
+    console.log(ui);
     //Update the room-header to be the name of the current room
-    roomHeader.innerHTML = gameState["game"]["currentPlayerLocation"];
+    ui.roomHeader.innerHTML = gameState.game["currentPlayerLocation"];
 
     //Update the room, inventory, and atlas lists with current information
     //roomList wants the impression list for the current room the player is in
-    updateList(roomList, gameState["game"]["impressions"][gameState["game"]["currentPlayerLocation"]]);
+    updateList(ui.roomList, gameState["game"]["impressions"][gameState["game"]["currentPlayerLocation"]]);
     //inventory wants the inventory
-    updateList(inventoryList, gameState["game"]["inventory"]);
+    updateList(ui.inventoryList, gameState["game"]["inventory"]);
     //atlas needs the entire dictionary of impressions
-    updateList(atlasList, gameState["game"]["impressions"]);
+    updateList(ui.atlasList, gameState["game"]["impressions"]);
 
     //Go through all the new clickable text elements and add event listeners to them.
     const clickableElements = document.querySelectorAll('.clickable');
     clickableElements.forEach(element => {
         element.addEventListener('click', function() {
             //We want to add the word clicked to the user input field
-            userInput.value += this.textContent;
+            ui.userInput.value += this.textContent;
         });
         element.addEventListener('mouseenter', function() {
             //Then we want them to visually look different when moused over
@@ -88,36 +94,3 @@ function updateList(listHTML, listArray) {
     //set the listHTML's innerHTML to whatever the finalText is.
     listHTML.innerHTML = finalText;
 }
-
-//server stuff
-var search_params = new URLSearchParams(window.location.search);
-const gameId = search_params.get('gameId');
-
-function loadGame() {
-    fetch(`/game/${gameId}`)
-        .then((res) => res.json())
-        .then((game) => {
-            console.log('This is a fetch message');
-            console.log(game);
-            updateScreen(game);
-            //on_init(game.board);
-        });
-}
-
-function makeMove(move) {
-    fetch('/move', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameId, move }),
-    })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                console.log(data);
-            }
-        });
-}
-
-window.onload = loadGame;

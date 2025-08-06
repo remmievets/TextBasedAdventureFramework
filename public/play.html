@@ -5,109 +5,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>Text Adventure</title>
 	<link rel="stylesheet" href="play.css" />
+	<script defer src="play.js"></script>
+	<script defer src="common/client.js"></script>
 </head>
 
 <body>
 	<div id="game-container">
 		<div id="log-container">
 			<div id="log-border">
-				<div id="log">
-					
-Royal Road
-RainbowCatTopHatRainbowCatTopHat
-Search title...
- 
- Read 
- Write
- Forums
- Member List
- Support 
- Premium
-I'm Just a Fox I Swear!I'm Just a Fox I Swear! by Kirrelevent 
-Side Story; the stars
-A note from Kirrelevent
-oops I guess there's one last short side-chapter
-
- 
-
-The sun is a frighteningly beautiful thing. It dominates the sky during the day, demanding attention and respect.
-
-On the other hand, The moon is a calming beauty. It is only a small part of the sky, sometimes overshadowed by the sun, sometimes glowing brightly among the night sky.
-
-And ignoring both are the stars. When the sun is no longer shining, or the moon is quieter than normal, the stars echo from the void beyond the sky.
-
-Dorlin curses, stretching off of the tree he was hiding in. No soldiers today. At this rate, they might not even come. After all, the village got three messenger pigeons already, so maybe they think it unnecessary to send soldiers.
-
-Walking back towards the village, he looks up at the starry sky. The moon hasn't risen yet, leaving the sky just a little emptier. Yet, he still can't help but look at the stars.
-
-Dorlin steps out of the forest, past the guardian stone, to the edge of the village. There, standing alone in the middle of the village, is a child staring up at the night sky.
-
-Pom's quasi-compound eyes stare transfixed by the stars, a reflection of the night sky glittering in her eyes. Her hands are held out above her, a reference point for a sky devoid of a moon.
-
-Despite the coldness of the night, Pom is entirely unbothered. Soft yellow fur covers her wrists, neck, and legs, sometimes interrupted by a stipe of black fur. Her long paper wings, too big for a child, wrap around her shoulders, forming a living cloak to guard against any wind. She reminds Dorlin of a bee, though far cuter and huggable.
-
-Pom's antennae twitch, sensing something familiar. Turning away from the stars, she sees Dorlin, and immediately dives forward for a hug. Of course, he catches Pom with a full smile and returns the hug, before tilting his head questioningly. He was asking why Pom was outside.
-
-Silently, Pom simply looks up. Dorlin follows her gaze, and they watch the stars together. The two lie down on the grass and stare up, sometimes pointing at something interesting, sometimes simply watching silently. Pom's internal mandibles start clicking in contentment, and Dorlin hums a simple tune in response, though Pom can't hear it.
-
-Eventually, Pom falls asleep to the field of starlight. Dorlin gets up and carefully carries Pom back home.
-
-Wisteria lets out a sigh of relief. All of the stress and tension releases and vaporizes in the green smoke. The ritual of prosperity is complete, and now she can rest.
-
-Sitting down on a warm stone, she looks up at the night sky fading in. It has been a long time since she last watched the stars. For someone who lives so long, something as unchanging as the night sky starts being boring after the hundredth year.
-
-Yet, tonight she still stared up. So what if nothing changes, the stars still shine beautifully.
-
-With the ritual complete, the other crows arrive to enjoy the remaining warmth of the fire. Dozens of crows to each stone, nestled together in harmony. Though, only a few join Wisteria.
-
-Three white crows sit with Wisteria; two adults and a young one. Lily nestles up to Wisteria, enjoying their closeness, while the other two simply sit nearby out of respect and professionalism. Of course, Wisteria doesn't care about that, and so she wraps her wings around the two and brings them closer.
-
-And so, as a family, the crows watch the stars. The stars that everyone sees.
-
-A wolf and a fox sit together, watching the night sky. They do not speak, though neither can understand the other even if they tried.
-
-The fox appreciates the company. Mochi hadn't really had companionship like this in a long time. Sure, the crows are friends, but they leave too soon. And most other animals either fear her, ignore her, or actively scowl against her (territory is an important thing). And so, being able to just sit with a wolf is an enjoyable moment that she wants to keep for as long as possible.
-
-The prime wolf Nikola, on the other hand, was quite anxious. Not out of fear of danger, but because he had never experienced something like this before. Other wolves were quite active in their socializing, much to his annoyance. Yet, now, the fox was too passive.
-
-In truth, he simply did not know how to act. He was afraid of scaring the fox away, or hurting their feelings unintentionally, or offending it, or or...
-
-And so, for now, the two sit together, silently watching the stars whisper by.
-
-A note from Kirrelevent
-Pom is a Belmthene, which evolved from bees. In-system evolution hasn't come up yet, but that's an unintended side effect of having five characters who can't evolve, for very different reasons (two are dead, but still)
-
-About the author
-Kirrelevent
-Kirrelevent 
- December 27th, 2024 02:35 PM
- Bio: I have approximate knowledge of many things. And also google. That helps a lot.
-
-Achievements
-
-Comments(8) 
-About
-Royal Road® is the home of web novels and fan fictions! In our amazing community, you can find various talented individuals who write as a hobby or even professionally, artists who create art for them, and many, many readers who provide valuable feedback and encouragement.
-
-Amazon Affiliate
-Royal Road® as an Amazon Associate earns from qualifying purchases.
-Theme Select
-
-Dark
-
-Follow Us On
-Need some help?
-Create a support ticket
-
-Contact
-Contact Us by Email
-
-Advertising
-Ads for Authors
-Programmatic Advertising
-Royal Road® © 2025Terms of Service | Privacy Policy | Cookie Policy | DMCA | Blog | Status
- 
-				</div>
+				<div id="log"></div>
 			</div>
 			<div id="input-container">
 				<input id="user-input" spellcheck="false">
@@ -118,20 +24,19 @@ Royal Road® © 2025Terms of Service | Privacy Policy | Cookie Policy | DMCA | B
 			<div id="column-container">
 				<div id="room-column">
 					<div id="room-header">Room Name</div>
-					<div id="room-list">Example1, Example2, Example3, Example4</div>
+					<div id="room-list"></div>
 				</div>
 				<div id="inventory-column">
 					<div id="inventory-header">Inventory</div>
-					<div id="inventory-list">Example1, Example2, Example3, Example4</div>
+					<div id="inventory-list"></div>
 				</div>
 				<div id="atlas-column">
 					<div id="atlas-header">Room Atlas</div>
-					<div id="atlas-list">Example1, Example2, Example3, Example4</div>
+					<div id="atlas-list"></div>
 				</div>
 			</div>
 			<div id="command-container"></div>
 		</div>
 	</div>
-	<script src="play.js"></script>
 </body>
 </html>
