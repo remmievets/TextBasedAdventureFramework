@@ -10,6 +10,7 @@ const ui = {
     inventoryList: document.getElementById('inventory-list'),
     atlasList: document.getElementById('atlas-list'),
     lookCommand: document.getElementById('look-command'),
+    takeCommand: document.getElementById('take-command'),
 };
 
 //Function for recieving input from the user
@@ -26,7 +27,9 @@ function recievedInput(event) {
 function addCommand(event) {
     let text = event.target.id.substring(0, event.target.id.indexOf('-'));
     if (text === 'look') {
-        text = 'look at '
+        text = 'look at ';
+    } else if (text === 'take') {
+        text = 'take the ';
     }
     ui.userInput.value += text;
 }
@@ -34,6 +37,10 @@ function addCommand(event) {
 //Add listeners for clicking the command buttons.
 if (ui.lookCommand) {
     ui.lookCommand.addEventListener('click', addCommand);
+}
+
+if (ui.takeCommand) {
+    ui.takeCommand.addEventListener('click', addCommand);
 }
 
 //Add listeners for clicking the enter button and entering text.

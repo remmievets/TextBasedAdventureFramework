@@ -29,13 +29,28 @@ const data = {
 
         nightstand: 'This is a [c]nightstand[/c] containing an [c]oak key[/c].',
 
-        bed: 'This is a [c]bed[/c].',
+        bed: 'This is a [c]bed[/c]. It is moldy, enough so that you decide against sleeping in it. Or touching it.',
         
         //test item
         'test item': "This is a test item. You shouldn't see this dialog.",
 
         //Keep at the bottom of LookText
         invalid: "You look for the [t]. You can't find one anywhere nearby.",
+    },
+    takeText: {
+
+        'oak key': 'Indeed! The [c]oak key[/c] looks extremely convienient and useful, \
+        so naturally you grab it and add it to your inventory.',
+
+        bed: "Mmm, no thanks. It wouldn't fit into your pocket and even if it did why would you want to keep a moldy [c]bed[/c]???",
+
+        //Keep at the bottom of takeText
+        invalid: "You cannot take the [t]. No matter how you try.",
+
+        invalidRoom: "You cannot take the [t]. Obviously! That's an entire room!",
+
+        invalidInventory: "You can take the [t]... you should know, considering you already did. \
+        Look, it's in your inventory right now!",
     }
 }
     
