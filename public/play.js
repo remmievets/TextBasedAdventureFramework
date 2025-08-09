@@ -27,11 +27,10 @@ function recievedInput(event) {
 function addCommand(event) {
     let text = event.target.id.substring(0, event.target.id.indexOf('-'));
     if (text === 'look') {
-        text = 'look at ';
+        (ui.userInput.value.includes('look at ')) ? ui.userInput.value = ui.userInput.value.replace('look at ', '') : ui.userInput.value = 'look at ' + ui.userInput.value
     } else if (text === 'take') {
-        text = 'take the ';
+        (ui.userInput.value.includes('take the ')) ? ui.userInput.value = ui.userInput.value.replace('take the ', '') : ui.userInput.value = 'take the ' + ui.userInput.value
     }
-    ui.userInput.value = text + ui.userInput.value;
 }
 
 //Add listeners for clicking the command buttons.
@@ -82,7 +81,7 @@ function updateScreen(gameState) {
     clickableElements.forEach((element) => {
         element.addEventListener('click', function () {
             //We want to add the word clicked to the user input field
-            ui.userInput.value += this.textContent;
+            (ui.userInput.value.includes(this.textContent)) ? ui.userInput.value = ui.userInput.value.replace(this.textContent, '') : ui.userInput.value += this.textContent
         });
         element.addEventListener('mouseenter', function () {
             //Then we want them to visually look different when moused over
