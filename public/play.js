@@ -31,7 +31,7 @@ function addCommand(event) {
     } else if (text === 'take') {
         text = 'take the ';
     }
-    ui.userInput.value += text;
+    ui.userInput.value = text + ui.userInput.value;
 }
 
 //Add listeners for clicking the command buttons.
