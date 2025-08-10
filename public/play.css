@@ -246,6 +246,8 @@ body {
 	background-color: chocolate;
 	flex-grow: 1;
 	flex-basis: 0;
+	display: flex;
+	flex-direction: row;
 }
 
 .clickable {
@@ -272,4 +274,9 @@ body {
 .log-entry-player {
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+.command {
+	margin: 10px;
+	height: fit-content;
 }

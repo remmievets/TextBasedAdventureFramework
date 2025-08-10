@@ -11,6 +11,7 @@ const ui = {
     atlasList: document.getElementById('atlas-list'),
     lookCommand: document.getElementById('look-command'),
     takeCommand: document.getElementById('take-command'),
+    useCommand: document.getElementById('use-command'),
 };
 
 //Function for recieving input from the user
@@ -26,10 +27,16 @@ function recievedInput(event) {
 //Function for adding the commands to the user input on click
 function addCommand(event) {
     let text = event.target.id.substring(0, event.target.id.indexOf('-'));
-    if (text === 'look') {
-        (ui.userInput.value.includes('look at ')) ? ui.userInput.value = ui.userInput.value.replace('look at ', '') : ui.userInput.value = 'look at ' + ui.userInput.value
-    } else if (text === 'take') {
-        (ui.userInput.value.includes('take the ')) ? ui.userInput.value = ui.userInput.value.replace('take the ', '') : ui.userInput.value = 'take the ' + ui.userInput.value
+    switch (text) {
+        case 'look':
+            (ui.userInput.value.includes('look at ')) ? ui.userInput.value = ui.userInput.value.replace('look at ', '') : ui.userInput.value = 'look at ' + ui.userInput.value
+            break;
+        case 'take':
+            (ui.userInput.value.includes('take the ')) ? ui.userInput.value = ui.userInput.value.replace('take the ', '') : ui.userInput.value = 'take the ' + ui.userInput.value
+            break;
+        case 'use':
+            (ui.userInput.value.includes('use the ')) ? ui.userInput.value = ui.userInput.value.replace('use the ', '') : ui.userInput.value = 'use the ' + ui.userInput.value
+            break;
     }
 }
 
@@ -40,6 +47,10 @@ if (ui.lookCommand) {
 
 if (ui.takeCommand) {
     ui.takeCommand.addEventListener('click', addCommand);
+}
+
+if (ui.useCommand) {
+    ui.useCommand.addEventListener('click', addCommand);
 }
 
 //Add listeners for clicking the enter button and entering text.
@@ -92,7 +103,6 @@ function updateScreen(gameState) {
             this.style.textDecoration = 'none';
         });
     });
-
 }
 
 //scroll to the end of the log

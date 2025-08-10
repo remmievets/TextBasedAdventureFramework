@@ -1,6 +1,6 @@
 //Tags (Need implementation):
 //[c] and [/c]: these tags signifies clickable text, whatever they encompasses can be clicked on and added to the input, also italicizes.
-//[t]: NONFUNCTIONAL this tag refers to whatever target the player tried to interact with, which is then inserted into the text at that position.
+//[t]: this tag refers to whatever target the player tried to interact with, which is then inserted into the text at that position.
 
 //define all the constant data
 const data = {
@@ -38,7 +38,7 @@ const data = {
         invalid: "You look for the [t]. You can't find one anywhere nearby.",
     },
     takeText: {
-
+        //Strange Cabin? testing text
         'oak key': 'Indeed! The [c]oak key[/c] looks extremely convienient and useful, \
         so naturally you grab it and add it to your inventory.',
 
@@ -47,11 +47,29 @@ const data = {
         //Keep at the bottom of takeText
         invalid: "You cannot take the [t]. No matter how you try.",
 
-        invalidRoom: "You cannot take the [t]. Obviously! That's an entire room!",
+        invalidRoom: "You cannot take the [c][t][/c]. Obviously! That's an entire room!",
 
-        invalidInventory: "You can take the [t]... you should know, considering you already did. \
+        invalidInventory: "You CAN take the [c][t][/c]... you should know, considering you already did. \
         Look, it's in your inventory right now!",
-    }
+    },
+    useText: {
+        //Strange cabin testing text
+        'oak key': {
+            default: "Sure, but a key is useless by itself. So use the [c]oak key[/c] on... what?",
+
+            'oak door': 'You use the [c]oak key[/c] to open the [c]oak door[/c]. This breaks the [c]oak key[/c].',
+
+            invalid: "The [c]oak key[/c] didn't seem to have any use with that.",
+
+        },
+
+        bed: "You aren't tired, and even if you were you'd rather sleep on the floor.",
+
+        //Keep at the bottom of useText
+        invalid: "You can't think of any uses for [t]. Must not be very useful.",
+
+        invalidRoom: "Use the [c][t][/c]? For what, hosting a party?",
+    },
 }
     
 //export it

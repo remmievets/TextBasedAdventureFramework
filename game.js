@@ -18,6 +18,7 @@ const gameTemplate = {
             nightstand: {},
             'oak key': {
                 holdable: true,
+                breakable: true,
             },
         },
     },
@@ -47,18 +48,26 @@ function parseTarget(game, move) {
     //Split the user input into an array based on spaces.
     let wordList = move.split(' ');
     //Trim the commands from the output (assuming we failed to figure out what their target is). Otherwise return the whole input.
-    if (wordList[0] === 'look') {
-        //Remove the first word because it's a command
-        wordList.shift();
-        //Remove 'at' because it was likely added by the look button.
-        (wordList[0] === 'at') && wordList.shift()
-    } else if (wordList[0] === 'take') {
-        //Remove the first word because it's a command
-        wordList.shift();
-        //Remove 'the' because it was likely added by the take button.
-        (wordList[0] === 'the') && wordList.shift()
-    } else {
-        return move;
+    switch (wordList[0]) {
+        case 'look':
+            //Remove the first word because it's a command
+            wordList.shift();
+            //Remove 'at' because it was likely added by the look button.
+            (wordList[0] === 'at') && wordList.shift()
+            break;
+        case 'take':
+            wordList.shift();
+            //Remove 'the' because it was likely added by the take button.
+            (wordList[0] === 'the') && wordList.shift()
+            break;
+        case 'use':
+            wordList.shift();
+            //Remove 'the' because it was likely added by the use button.
+            (wordList[0] === 'the') && wordList.shift()
+            break;
+        default:
+            //Just nonsense, return everything
+            return move;
     }
     //rebuild the target, and return the full string.
     let text = '';
@@ -83,8 +92,8 @@ function parseLook(game, target) {
         game.log.push(text);
     } else if (typeof data.lookText[target] === 'string') {
         //We know that the target exists and is simple. Set text to its text.
-        text = data.lookText[target];
         //Before we push to the log run enhanceText to format the text and update impressions
+        text = data.lookText[target];
         text = enhanceText(text, game, target);
         game.log.push(text);
     } else {
@@ -119,7 +128,7 @@ function parseTake(game, target) {
         text = enhanceText(text, game, target);
         game.log.push(text);
     } else if (typeof data.takeText[target] === 'undefined') {
-        //The target exists in the room but has no unique text, or doesn't exist
+        //The target exists in the room but has no unique text, or doesn't exist, send an error
         text = data.takeText['invalid'];
         text = enhanceText(text, game, target);
         game.log.push(text);
@@ -144,8 +153,74 @@ function parseTake(game, target) {
     }
 }
 
+//Function to parse the use command and return intended text.
+function parseUse(game, target, target2 = 'default') {
+    let text = '';
+    //The user tried to use something!
+    //If they targeted a room, then send them a unique error for fun
+    let invalidTargetsRooms = Object.keys(game.world);
+    //We have the target so, we check if the object is simple (it only has one look dialog in data.lookText) or complex.
+    if (invalidTargetsRooms.includes(target)) {
+        //The target is a room, send a unique error.
+        text = data.useText['invalidRoom'];
+        text = enhanceText(text, game, target);
+        game.log.push(text);
+    } else if (typeof data.useText[target] === 'undefined') {
+        //The target exists in the room, but has no unique text, or doesn't exist at all.
+        text = data.useText['invalid'];
+        text = enhanceText(text, game, target);
+        game.log.push(text);
+    } else if (typeof data.useText[target] === 'string') {
+        //We know that the target exists and is simple. Set text to its text.
+        //Before we push to the log run enhanceText to format the text and update impressions
+        text = data.useText[target];
+        text = enhanceText(text, game, target);
+        game.log.push(text);
+    } else {
+        //Otherwise we know that the description is complex, and dependant on the properties of the object.
+        //First, let's check if the object needs a target2, and if one matches (otherwise use default as default)
+        if (Object.keys(data.useText[target]).includes(target2)) {
+            //one does! return that
+            text = data.useText[target][target2];
+            text = enhanceText(text, game);
+            game.log.push(text);
+        } else if (!(target2 === 'default')) {
+            //That target2 has no dialog with this target.
+            text = data.useText[target]['invalid'];
+            text = enhanceText(text, game);
+            game.log.push(text);
+        }
+        //Add more complex description types to the end here.
+    }
+    //Now that we've updated the log we need to actually check if the user unlocked something.
+    //First is the target2 in the room, or in the inventory (if it's in the room atlas forget it)
+    if (Object.keys(game.world[game.currentPlayerLocation]).includes(target2) && game.world[game.currentPlayerLocation][target2].hasOwnProperty('unlockObject')) {
+        //target2 is inside the room and has the property unlockObject
+        //Was its unlock object target?
+        if (game.world[game.currentPlayerLocation][target2].unlockObject === target) {
+            //Yes, then it is unlocked.
+            game.world[game.currentPlayerLocation][target2].locked = false;
+            //if the key was breakable then destroy it. Check it exists first!
+            if (Object.keys(game.inventory).includes(target) && game.inventory[target].hasOwnProperty('breakable')) {
+                //breakable item was in the inventory
+                //Remove it from the inventory
+                delete game.inventory[target];
+            } else if (Object.keys(game.world[game.currentPlayerLocation]).includes(target) && game.world[game.currentPlayerLocation][target].hasOwnProperty('breakable')) {
+                //breakable item was in the room
+                //Remove it from the room
+                delete game.world[game.currentPlayerLocation][target];
+                //Remove the impression of the object from the room
+                game.impressions[game.currentPlayerLocation].splice(game.impressions[game.currentPlayerLocation].indexOf(target), 1);
+            }
+        }
+    } else if (Object.keys(game.inventory).includes(target2)) {
+        //target2 is in the inventory
+        //Currently this shouldn't do anything but it might in the future.
+    }
+}
+
 //Function to sylize the text based on the tags and update impressions.
-function enhanceText(text, game, target) {
+function enhanceText(text, game, target = undefined) {
     //return the reformated text at the end
     let enhancedText = text;
     //Create an array to fill with all the new impressions
@@ -199,25 +274,39 @@ function updateGame(gameId, gameData) {
 }
 
 function getGameView(gameId) {
-    console.log(`GAME VIEW ${gameId}`);
+    // console.log(`GAME VIEW ${gameId}`);
     return game[gameId];
 }
 
 function parseAction(gameId, move) {
-    console.log(`PARSE ACTION ${gameId} ${move}`);
+    // console.log(`PARSE ACTION ${gameId} ${move}`);
     //Add the user's text to the log whatever it is that they typed
     game[gameId].log.push(">>" + move);
     //attempt to parse the user's command
     let command = parseCommand(move);
-    //attempt to parse the user's target
-    let target = parseTarget(game[gameId], move);
-    if (command === 'look') {
-        //They are using the look command
-        parseLook(game[gameId], target);
-    } else if (command === 'take') {
-        //They are using the take command
-        parseTake(game[gameId], target);
+    //attempt to parse the user's target (and if used the 'use' command and their move contains 'on' parse target2)
+    let target = undefined;
+    let target2 = undefined;
+    if (command === 'use' && move.includes(' on ')) {
+        target = parseTarget(game[gameId], move.substring(0, move.indexOf(' on ')));
+        target2 = parseTarget(game[gameId], move.substring(move.indexOf(' on ') + 4));
     } else {
+        target = parseTarget(game[gameId], move);
+    }
+    switch (command) {
+        case 'look':
+            //They are using the look command
+            parseLook(game[gameId], target);
+            break;
+        case 'take':
+            //They are using the take command
+            parseTake(game[gameId], target);
+            break;
+        case 'use' :
+            //They are using the use command
+            parseUse(game[gameId], target, target2);
+            break;
+        default:
         //Not sure what the user is doing, send them an error!
         //TODO
     }
